@@ -1,6 +1,6 @@
 spring:
   application:
-    name: note-service
+    name: cafetaria
   datasource:
     url: jdbc:h2:mem:testdb
     driverClassName: org.h2.Driver

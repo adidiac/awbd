@@ -7,8 +7,8 @@ spring:
   cloud:
     gateway:
       routes:
-        - id: note-service
-          uri: lb://note-service
+        - id: cafetaria
+          uri: lb://cafetaria
           predicates:
             - Path=/notes/**
 eureka:

@@ -1,19 +1,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: note-service
+  name: cafetaria
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: note-service
+      app: cafetaria
   template:
     metadata:
       labels:
-        app: note-service
+        app: cafetaria
     spec:
       containers:
-        - name: note-service
-          image: your-docker-repo/note-service
+        - name: cafetaria
+          image: adidiac/cafetaria
           ports:
             - containerPort: 8081

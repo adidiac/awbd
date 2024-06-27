@@ -14,6 +14,6 @@ spec:
     spec:
       containers:
         - name: zipkin-server
-          image: your-docker-repo/zipkin-server
+          image: adidiac/zipkin-server
           ports:
             - containerPort: 9411

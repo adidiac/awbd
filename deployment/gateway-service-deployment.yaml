@@ -14,6 +14,6 @@ spec:
     spec:
       containers:
         - name: gateway-service
-          image: your-docker-repo/gateway-service
+          image: adidiac/gateway-service
           ports:
             - containerPort: 8080

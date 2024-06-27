@@ -37,7 +37,7 @@ sudo minikube start --driver=none
 sudo apt install -y git
 
 # Clone Your Project Repository
-git clone https://github.com/your-repo/note-app.git
+git clone https://github.com/adidiac/awbd.git
 cd note-app
 
 # Set Docker Hub repository
@@ -58,9 +58,9 @@ docker build -t $DOCKER_REPO/eureka-server .
 cd ..
 
 # Build Note Service
-cd note-service
+cd cafetaria
 mvn clean package
-docker build -t $DOCKER_REPO/note-service .
+docker build -t $DOCKER_REPO/cafetaria .
 cd ..
 
 # Build Gateway Service
@@ -73,7 +73,7 @@ cd ..
 docker login
 docker push $DOCKER_REPO/config-server
 docker push $DOCKER_REPO/eureka-server
-docker push $DOCKER_REPO/note-service
+docker push $DOCKER_REPO/cafeteria
 docker push $DOCKER_REPO/gateway-service
 
 # Create Docker Compose file
@@ -94,8 +94,8 @@ services:
     networks:
       - note-app-network
 
-  note-service:
-    image: $DOCKER_REPO/note-service
+  cafetaria:
+    image: $DOCKER_REPO/cafetaria
     ports:
       - "8081:8081"
     networks:
