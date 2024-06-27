@@ -1,4 +1,4 @@
-package main.java.com.example.gatewayservice;
+package com.example.gatewayservice;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

@@ -1,0 +1,42 @@
+version: '3'
+services:
+  config-server:
+    image: your-dockerhub-username/config-server
+    ports:
+      - "8888:8888"
+    networks:
+      - note-app-network
+
+  eureka-server:
+    image: your-dockerhub-username/eureka-server
+    ports:
+      - "8761:8761"
+    networks:
+      - note-app-network
+
+  note-service:
+    image: your-dockerhub-username/note-service
+    ports:
+      - "8081:8081"
+    networks:
+      - note-app-network
+    environment:
+      - SPRING_PROFILES_ACTIVE=default
+
+  gateway-service:
+    image: your-dockerhub-username/gateway-service
+    ports:
+      - "8080:8080"
+    networks:
+      - note-app-network
+
+  zipkin:
+    image: openzipkin/zipkin
+    ports:
+      - "9411:9411"
+    networks:
+      - note-app-network
+
+networks:
+  note-app-network:
+    driver: bridge
