@@ -9,8 +9,6 @@ import com.cafeteria.cafeteria.service.MenuItemService;
 import com.cafeteria.cafeteria.service.PromotionService;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cloud.client.circuitbreaker.CircuitBreaker;
-import org.springframework.cloud.client.circuitbreaker.CircuitBreakerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -31,13 +29,10 @@ public class MenuItemServiceImpl implements MenuItemService {
         this.promotionService = promotionService;
     }
 
-    @Autowired
-    private CircuitBreakerFactory circuitBreakerFactory;
 
     @Override
     public List<MenuItem> getAllMenuItems() {
-        CircuitBreaker circuitBreaker = circuitBreakerFactory.create("circuitbreaker");
-        return circuitBreaker.run(() -> menuItemRepository.findAll(), throwable -> fallbackGetAllMenuItems());
+        return menuItemRepository.findAll();
     }
 
     public List<MenuItem> fallbackGetAllMenuItems() {
