@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+</head>
+<body>
+    <div th:replace="layout/base-layout">
+        <div th:fragment="content">
+            <h2>Login</h2>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                <div class="form-group">
+                    <button type="submit">Login</button>
+                </div>
+            </form>
+        
+            <script>
+                document.getElementById('loginForm').addEventListener('submit', function(event) {
+                    event.preventDefault();
+        
+                    const username = document.getElementById('username').value;
+                    const password = document.getElementById('password').value;
+        
+                    axios.post('http://localhost:8080/public/users/login', 
+                    {
+                        username: username,
+                        password: password
+                    })
+                    .then(response => {
+                        console.log('Login successful:', response);
+                        debugger
+                        const user = response.data;
+                        console.log('User:', user);
+                        localStorage.setItem('user', JSON.stringify(user));
+                        // Handle the response, e.g., store the JWT token
+                        localStorage.setItem('token', response.headers.authorization);
+                        // Redirect to another page or update the UI
+                        window.location.href = '/public/menu-items/menuItemsPageable';
+                    })
+                    .catch(error => {
+                        console.error('Login error:', error);
+                        // Handle login error (e.g., show an error message)
+                        alert('Login failed. Please check your credentials and try again.');
+                    });
+                });
+            </script>
+        
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Menu Item</title>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body>
+    <div th:replace="layout/base-layout">
+        <div th:fragment="content">
+            <h2>Add Menu Item</h2>
+            <form id="addMenuItemForm">
+                <div>
+                    <label for="name">Name:</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                <div>
+                    <label for="description">Description:</label>
+                    <input type="text" id="description" name="description" required>
+                </div>
+                <div>
+                    <label for="price">Price:</label>
+                    <input type="number" step="0.01" id="price" name="price" required>
+                </div>
+                <div>
+                    <label for="category">Category:</label>
+                    <input type="text" id="category" name="category" required>
+                </div>
+                <button type="submit" class="btn">Add Menu Item</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('addMenuItemForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            const token = localStorage.getItem('token');
+            const name = document.getElementById('name').value;
+            const description = document.getElementById('description').value;
+            const price = document.getElementById('price').value;
+            const category = document.getElementById('category').value;
+
+            axios.post('http://localhost:8080/public/menu-items', {
+                name,
+                description,
+                price,
+                category
+            }, {
+                headers: { 'Authorization': `${token}` }
+            })
+            .then(response => {
+                alert('Menu item added successfully!');
+                window.location.href = '/public/menu-items/menuItemsPageable';
+            })
+            .catch(error => {
+                console.error('There was an error adding the menu item!', error);
+                alert('Failed to add menu item.');
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Menu Item</title>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body>
+    <div th:replace="layout/base-layout">
+        <div th:fragment="content">
+            <h2>Edit Menu Item</h2>
+            <form id="editMenuItemForm">
+                <input type="hidden" id="itemId" name="itemId" th:value="${menuItem.id}">
+                <div>
+                    <label for="name">Name:</label>
+                    <input type="text" id="name" name="name" required th:value="${menuItem.name}">
+                </div>
+                <div>
+                    <label for="description">Description:</label>
+                    <input type="text" id="description" name="description" required  th:value="${menuItem.description}">
+                </div>
+                <div>
+                    <label for="price">Price:</label>
+                    <input type="number" step="0.01" id="price" name="price" required min="0" max="1000" th:value="${menuItem.price}">
+                </div>
+                <div>
+                    <label for="category">Category:</label>
+                    <input type="text" id="category" name="category" required th:value="${menuItem.category}">
+                </div>
+                <button type="submit" class="btn">Update Menu Item</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+
+        document.getElementById('editMenuItemForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            const token = localStorage.getItem('token');
+            const itemId = document.getElementById('itemId').value;
+            const name = document.getElementById('name').value;
+            const description = document.getElementById('description').value;
+            const price = document.getElementById('price').value;
+            const category = document.getElementById('category').value;
+            console.log('Token:', token);
+            console.log(itemId, name, description, price, category);
+
+            axios.put(`http://localhost:8080/public/menu-items/${itemId}`, {
+                name,
+                description,
+                price,
+                category
+            }, {
+                headers: { 'Authorization': `${token}` }
+            })
+            .then(response => {
+                alert('Menu item updated successfully!');
+                window.location.href = '/public/menu-items/menuItemsPageable';
+            })
+            .catch(error => {
+                console.error('There was an error updating the menu item!', error);
+                alert('Failed to update menu item.');
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: note-service
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: note-service
+  template:
+    metadata:
+      labels:
+        app: note-service
+    spec:
+      containers:
+        - name: note-service
+          image: your-docker-repo/note-service
+          ports:
+            - containerPort: 8081

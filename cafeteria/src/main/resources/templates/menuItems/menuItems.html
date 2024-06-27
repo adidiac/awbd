@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu Items</title>
+    <!-- Axios CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body>
+    <div th:replace="layout/base-layout">
+        <div th:fragment="content">
+            <h2>Menu Items</h2>
+            <button id="addItemButton" class="btn" style="display: none;">Add Menu Item</button>
+            <table>
+                <thead>
+                    <tr>
+                        <th><a th:href="@{/public/menu-items/menuItemsPageable(sortBy=id)}">ID</a></th>
+                        <th><a th:href="@{/public/menu-items/menuItemsPageable(sortBy=name)}">Name</a></th>
+                        <th><a th:href="@{/public/menu-items/menuItemsPageable(sortBy=price)}">Price</a></th>
+                        <th><a th:href="@{/public/menu-items/menuItemsPageable(sortBy=category)}">Category</a></th>
+                        <th><a th:href="@{/public/menu-items/menuItemsPageable(sortBy=description)}">Description</a></th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="menuItem : ${menuItems.content}">
+                        <td th:text="${menuItem.id}"></td>
+                        <td th:text="${menuItem.name}"></td>
+                        <td th:text="${menuItem.price}"></td>
+                        <td th:text="${menuItem.category}"></td>
+                        <td th:text="${menuItem.description}"></td>
+                        <td>
+                            <!-- Placeholder buttons to be controlled via JavaScript -->
+                            <button class="add-to-order" th:data-id="${menuItem.id}" 
+                            style="display: none;color: #fff; background-color: #3498db; border: 1px solid #f8f9fa;border: 2px solid #3498db;"
+                            >Add to Order</button>
+                            <button class="edit-item" th:data-id="${menuItem.id}" 
+                            style="display: none;color: #fff; background-color: #3498db; border: 1px solid #f8f9fa;border: 2px solid #3498db;"
+                            >Edit</button>
+                            <button class="delete-item" th:data-id="${menuItem.id}"
+                            style="display: none;color: #fff; background-color: #3498db; border: 1px solid #f8f9fa;border: 2px solid #3498db;"
+                            >Delete</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="pagination">
+                <a th:if="${menuItems.hasPrevious()}" th:href="@{/public/menu-items/menuItemsPageable(page=${menuItems.previousPageable().pageNumber})}">Previous</a>
+                <a th:if="${menuItems.hasNext()}" th:href="@{/public/menu-items/menuItemsPageable(page=${menuItems.nextPageable().pageNumber})}">Next</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const user = JSON.parse(localStorage.getItem('user'));
+            if (user && user.role) {
+                const role = user.role;
+
+                if (role === 'CUSTOMER') {
+                    document.querySelectorAll('.add-to-order').forEach(button => {
+                        button.style.display = 'inline';
+                        button.addEventListener('click', function() {
+                            const itemId = this.getAttribute('data-id');
+                            let order = JSON.parse(localStorage.getItem('order')) || [];
+                            order.push(itemId);
+                            localStorage.setItem('order', JSON.stringify(order));
+                            alert('Item added to order!');
+                        });
+                    });
+                }
+
+                if (role === 'admin') {
+                    document.getElementById('addItemButton').style.display = 'inline';
+                    document.getElementById('addItemButton').addEventListener('click', function() {
+                        window.location.href = '/public/menu-items/add';
+                    });
+
+                    document.querySelectorAll('.edit-item').forEach(button => {
+                        button.style.display = 'inline';
+                        button.addEventListener('click', function() {
+                            const itemId = this.getAttribute('data-id');
+                            window.location.href = `/public/menu-items/edit/${itemId}`;
+                        });
+                    });
+
+                    document.querySelectorAll('.delete-item').forEach(button => {
+                        button.style.display = 'inline';
+                        button.addEventListener('click', function() {
+                            const itemId = this.getAttribute('data-id');
+                            const token = localStorage.getItem('token');
+
+                            axios.delete(`http://localhost:8080/public/menu-items/${itemId}`, {
+                                headers: { 'Authorization': `${token}` }
+                            })
+                            .then(response => {
+                                alert('Item deleted successfully!');
+                                window.location.reload();
+                            })
+                            .catch(error => {
+                                console.error('There was an error deleting the item!', error);
+                                alert('Failed to delete item.');
+                            });
+                        });
+                    });
+                }
+            }
+        });
+    </script>
+</body>
+</html>

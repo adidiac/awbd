@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:include="layout :: layout">
+<head>
+    <title>Feedback List</title>
+</head>
+<body>
+<div class="container">
+    <h2>Feedback List</h2>
+    <div th:replace="layout/base-layout">
+        <div th:fragment="content">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>Feedback</th>
+                    <th>Rating</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="feedback : ${feedbackPage.content}">
+                    <td th:text="${feedback.feedback}"></td>
+                    <td th:text="${feedback.rating}"></td>
+                </tr>
+                </tbody>
+            </table>
+
+            <!-- Pagination -->
+            <div th:if="${feedbackPage.totalPages > 1}">
+                <ul class="pagination">
+                    <li th:class="${feedbackPage.firstPage} ? 'disabled'">
+                        <a th:href="@{${#httpServletRequest.requestURI}(page=0, size=${feedbackPage.size})}">&laquo;</a>
+                    </li>
+                    <li th:class="${feedbackPage.firstPage} ? 'disabled'">
+                        <a th:href="@{${#httpServletRequest.requestURI}(page=${feedbackPage.number - 1}, size=${feedbackPage.size})}">Previous</a>
+                    </li>
+                    <li th:class="${feedbackPage.lastPage} ? 'disabled'">
+                        <a th:href="@{${#httpServletRequest.requestURI}(page=${feedbackPage.number + 1}, size=${feedbackPage.size})}">Next</a>
+                    </li>
+                    <li th:class="${feedbackPage.lastPage} ? 'disabled'">
+                        <a th:href="@{${#httpServletRequest.requestURI}(page=${feedbackPage.totalPages - 1}, size=${feedbackPage.size})}">&raquo;</a>
+                    </li>
+                </ul>
+            </div>
+    </div>
+    </div>  
+</div>
+</body>
+</html>

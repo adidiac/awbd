@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Feedback Form</title>
+</head>
+<body>
+
+<h2>Feedback Form</h2>
+
+<form th:action="@{/api/feedback}" method="post" th:object="${createFeedback}">
+    <div>
+        <label for="feedback">Feedback:</label>
+        <input type="text" id="feedback" name="feedback" th:field="*{feedback}" required>
+        <!-- Display validation errors -->
+        <span th:if="${#fields.hasErrors('feedback')}" th:errors="*{feedback}"></span>
+    </div>
+    <div>
+        <label for="rating">Rating (1-5):</label>
+        <input type="number" id="rating" name="rating" th:field="*{rating}" required min="1" max="5">
+        <!-- Display validation errors -->
+        <span th:if="${#fields.hasErrors('rating')}" th:errors="*{rating}"></span>
+    </div>
+    <button type="submit">Submit Feedback</button>
+</form>
+
+</body>
+</html>
